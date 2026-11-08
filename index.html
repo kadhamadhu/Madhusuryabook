@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Madhusuryabook | Cricket Arena</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101827;color:white;font-family:Arial,sans-serif}
+header{background:#172438;padding:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.logo{font-size:23px;font-weight:bold;color:#40e6a0}
+.logo span{color:white}
+.coins{background:#263b50;padding:10px 14px;border-radius:20px;color:#ffd45a}
+.hero{padding:28px 18px;background:linear-gradient(135deg,#075d4b,#173d70)}
+.hero h1{font-size:29px;margin:0 0 10px}
+.hero p{color:#d6eee7;line-height:1.5}
+.tag{display:inline-block;background:#ffffff20;padding:7px 12px;border-radius:20px;font-size:12px}
+main{padding:18px;max-width:850px;margin:auto}
+h2{font-size:21px}
+.categories{display:flex;gap:9px;overflow-x:auto;padding:8px 0 16px}
+.categories button{white-space:nowrap;border:1px solid #34465c;background:#1b2b40;color:white;padding:10px 15px;border-radius:22px}
+.categories button.active{background:#16b981;color:#062b20;border-color:#16b981}
+.match{background:#1a293d;border:1px solid #30445c;padding:16px;border-radius:15px;margin:13px 0}
+.matchtop{display:flex;justify-content:space-between;gap:10px;color:#aebdd0;font-size:12px}
+.status{color:#55e5a2}
+.teams{display:flex;justify-content:space-around;align-items:center;text-align:center;padding:20px 0;font-size:17px;font-weight:bold}
+.vs{color:#f9c74f;font-size:13px}
+.pick{display:flex;gap:10px}
+.pick button{flex:1;background:#263d55;color:white;border:1px solid #45617e;border-radius:9px;padding:12px 5px}
+.pick button.selected{background:#087c58;border-color:#41e6a0}
+.note{font-size:12px;color:#9fb0c4;line-height:1.5}
+.panel{background:#1a293d;padding:17px;border-radius:14px;margin-top:20px}
+footer{text-align:center;color:#91a2b6;padding:25px;font-size:12px}
+button{cursor:pointer}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🏏 MADHU<span>SURYABOOK</span></div>
+  <div class="coins">🪙 <span id="coins">10,000</span> Demo Coins</div>
+</header>
+
+<section class="hero">
+  <span class="tag">🏆 CRICKET PREDICTION ARENA</span>
+  <h1>Welcome to Madhusuryabook!</h1>
+  <p>Follow cricket. Make predictions. Collect virtual points. Enjoy the game!</p>
+  <span class="tag">100% Virtual Coins · No Real Money</span>
+</section>
+
+<main>
+  <h2>🏏 Cricket Matches</h2>
+  <div class="categories" id="categories">
+    <button class="active" data-cat="All">All</button>
+    <button data-cat="International">International</button>
+    <button data-cat="IPL">IPL</button>
+    <button data-cat="BBL">BBL</button>
+    <button data-cat="NPL">NPL</button>
+    <button data-cat="Women's">Women's</button>
+    <button data-cat="Other">Other Leagues</button>
+  </div>
+
+  <div id="matches"></div>
+
+  <div class="panel">
+    <h2>🌟 Your Cricket Arena</h2>
+    <p>Make your match selections and enjoy friendly cricket predictions.</p>
+    <p class="note">Your selections are stored only in this demo page. Sign-in, saved accounts, real match feeds and leaderboards will be added in later development steps.</p>
+  </div>
+</main>
+
+<footer>
+  MADHUSURYABOOK · Cricket Prediction Gaming<br>
+  Demo entertainment only. No deposits, withdrawals or cash prizes.
+</footer>
+
+<script>
+const matches=[
+ {cat:"International",league:"International T20 · Sample",a:"🇮🇳 India",b:"🇦🇺 Australia",status:"Upcoming"},
+ {cat:"IPL",league:"Indian Premier League · Sample",a:"🔵 Mumbai",b:"🟡 Chennai",status:"Upcoming"},
+ {cat:"BBL",league:"Big Bash League · Sample",a:"Sydney Sixers",b:"Perth Scorchers",status:"Upcoming"},
+ {cat:"NPL",league:"Nepal Premier League · Sample",a:"Kathmandu",b:"Pokhara",status:"Upcoming"},
+ {cat:"Women's",league:"Women's Cricket · Sample",a:"🇮🇳 India Women",b:"🇦🇺 Australia Women",status:"Upcoming"},
+ {cat:"Other",league:"SA20 · Sample",a:"Pretoria",b:"Durban",status:"Upcoming"}
+];
+
+const area=document.getElementById("matches");
+
+function showMatches(category){
+ area.innerHTML="";
+ const list=category==="All"?matches:matches.filter(m=>m.cat===category);
+ if(!list.length){area.innerHTML="<p>No sample matches in this category yet.</p>";return;}
+ list.forEach((m,i)=>{
+  const card=document.createElement("div");
+  card.className="match";
+  card.innerHTML=`
+   <div class="matchtop"><span>${m.league}</span><span class="status">● ${m.status}</span></div>
+   <div class="teams"><span>${m.a}</span><span class="vs">VS</span><span>${m.b}</span></div>
+   <p class="note">Who do you think will win?</p>
+   <div class="pick">
+    <button data-choice="${m.a}">${m.a}</button>
+    <button data-choice="${m.b}">${m.b}</button>
+   </div>
+   <p class="note" id="result${i}">Select a team to record your demo prediction.</p>`;
+  area.appendChild(card);
+  card.querySelectorAll(".pick button").forEach(btn=>{
+   btn.addEventListener("click",()=>{
+    card.querySelectorAll(".pick button").forEach(b=>b.classList.remove("selected"));
+    btn.classList.add("selected");
+    card.querySelector(".note:last-child").textContent=
+     "Your demo prediction: "+btn.dataset.choice;
+   });
+  });
+ });
+}
+
+document.querySelectorAll(".categories button").forEach(btn=>{
+ btn.addEventListener("click",()=>{
+  document.querySelectorAll(".categories button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  showMatches(btn.dataset.cat);
+ });
+});
+
+showMatches("All");
+</script>
+</body>
+</html>
